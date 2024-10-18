@@ -30,7 +30,7 @@ classifiers = [
 
 ]
 dependencies = [
-    
+    "anytree"
 ]
 requires-python = ">=3.9"
 

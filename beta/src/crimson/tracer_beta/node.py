@@ -1,4 +1,4 @@
-from anytree import Node
+from crimson.anytree_extension.unique_node import UniqueNode
 from dataclasses import asdict
 from typing import Any, List, Dict, Optional
 from dataclasses import dataclass
@@ -18,7 +18,7 @@ class NodeBody:
     called_lineno: int | None = None
 
 
-class TraceNode(Node):
+class TraceNode(UniqueNode['TraceNode']):
     def __init__(
         self,
         name,

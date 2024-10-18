@@ -234,6 +234,7 @@ options = Options(
 
 dependencies = """
 anytree
+crimson-anytree-extension
 """
 
 
