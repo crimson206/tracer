@@ -12,10 +12,10 @@ class TraceEvent(BaseModel, Generic[Custom]):
     filename: str
     lineno: int
     event: Literal["call", "line", "return"]
-    arg: Any | None
+    arg: Optional[Any]
     level: int
     locals: Dict[str, Any] = {}
-    custom: Custom | None = None
+    custom: Optional[Custom] = None
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
