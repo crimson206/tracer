@@ -2,6 +2,7 @@ import sys
 from types import FrameType
 from typing import Optional, Callable, Any, List, Dict, Literal, Generic, TypeVar
 from pydantic import BaseModel, ConfigDict
+from crimson.tracer.filter import FrameFilter
 
 Custom = TypeVar("Custom")
 
@@ -32,11 +33,11 @@ class TraceManager:
     traces: Dict[str, List[TraceEvent]] = {}
     current_trace_name: Optional[str] = None
     stack_count: int = -1
-    frame_filter: Callable[[FrameType], bool] = lambda frame: True
+    frame_filter: FrameFilter = None
     event_editor: Callable[[TraceEvent], TraceEvent] = None
 
     @classmethod
-    def set_frame_filter(cls, frame_filter: Callable[[FrameType], bool]):
+    def set_frame_filter(cls, frame_filter: FrameFilter):
         cls.frame_filter = frame_filter
 
     @classmethod
@@ -45,7 +46,23 @@ class TraceManager:
 
     @classmethod
     def tracer(cls, frame: FrameType, event: str, arg: Any) -> Optional[Callable]:
-        if cls.frame_filter(frame):
+        """
+        Traces the execution of stack frames, applying filtering if a filter is set.
+
+        - If `frame_filter` is set, only frames that pass the filter are traced.
+        - If `frame_filter` is `None`, all frames are traced.
+
+        Args:
+            frame (FrameType): The current stack frame.
+            event (str): The type of tracing event ("call", "line", "return").
+            arg (Any): The argument associated with the event.
+
+        Returns:
+            Optional[Callable]: The tracer function itself for continued tracing.
+        """
+
+        # If no frame filter is set, trace all frames
+        if cls.frame_filter is None or cls.frame_filter(frame):
             if event == "call":
                 cls.stack_count += 1
                 cls._update_trace_event(frame, event, arg)
@@ -54,7 +71,9 @@ class TraceManager:
             elif event == "return":
                 cls._update_trace_event(frame, event, arg)
                 cls.stack_count -= 1
-        return cls.tracer
+
+        return cls.tracer  # Continue tracing
+
 
     @classmethod
     def _update_trace_event(cls, frame, event, arg):
@@ -66,7 +85,7 @@ class TraceManager:
         cls,
         func: Callable,
         name: Optional[str] = None,
-        frame_filter: Callable[[FrameType], bool] = None,
+        frame_filter: FrameFilter = None,
     ):
         if frame_filter is not None:
             cls.set_frame_filter(frame_filter)

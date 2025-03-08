@@ -2,7 +2,7 @@ from crimson.anytree_extension.unique_node import UniqueNode
 from dataclasses import asdict
 from typing import Any, List, Dict, Optional
 from dataclasses import dataclass
-from crimson.tracer_beta.tracer import TraceEvent
+from crimson.tracer.tracer import TraceEvent
 
 
 @dataclass
@@ -34,14 +34,17 @@ class TraceNode(UniqueNode['TraceNode']):
         result = {
             "type": "root" if self.is_root else "node",
             "name": self.name,
-            "children": [child.to_dict() for child in self.children],
         }
 
         if self.body:
-            result["body"] = asdict(self.body)
+            try:
+                result["body"] = asdict(self.body)
+            except Exception as e:
+                result["body"] = None
+
+        result["children"] = [child.to_dict() for child in self.children]
 
         return result
-
 
 def generate_trace_tree(trace_result: List[TraceEvent]) -> TraceNode:
     root = TraceNode("root")

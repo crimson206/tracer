@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "crimson-tracer"
-version = "0.1.0"
-description = "Your package description."
+version = "0.1.5"
+description = "A lightweight Python tracer for capturing and analyzing function call events with tree visualization and JSON serialization support."
 readme = "README.md"
 authors = [
   { name="Sisung Kim", email="sisung.kim1@gmail.com" },
@@ -30,7 +30,8 @@ classifiers = [
 
 ]
 dependencies = [
-    
+    "anytree",
+    "crimson-anytree-extension"
 ]
 requires-python = ">=3.9"
 
