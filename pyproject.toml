@@ -31,7 +31,8 @@ classifiers = [
 ]
 dependencies = [
     "anytree",
-    "crimson-anytree-extension"
+    "crimson-anytree-extension",
+    "pydantic"
 ]
 requires-python = ">=3.9"
 
