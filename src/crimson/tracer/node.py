@@ -1,6 +1,6 @@
 from crimson.anytree_extension.unique_node import UniqueNode
 from dataclasses import asdict
-from typing import Any, List, Dict, Optional
+from typing import Any, List, Dict, Optional, Union
 from dataclasses import dataclass
 from crimson.tracer.tracer import TraceEvent
 
@@ -12,17 +12,17 @@ class NodeBody:
     filename: str
     lineno: int
     args: Dict[str, Any]
-    return_lineno: int | None = None
+    return_lineno: Optional[int] = None
     return_value: Any = None
-    called_filename: str | None = None
-    called_lineno: int | None = None
+    called_filename: Optional[str] = None
+    called_lineno: Optional[int] = None
 
 
 class TraceNode(UniqueNode['TraceNode']):
     def __init__(
         self,
         name,
-        body: NodeBody | None = None,
+        body: Optional[NodeBody] = None,
         parent: "TraceNode" = None,
         children: List["TraceNode"] = None,
         **kwargs_dummy,
