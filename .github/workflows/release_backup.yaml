@@ -1,4 +1,4 @@
-name: Release Beta
+name: Release Workflow
 
 on:
   workflow_dispatch:
@@ -15,8 +15,10 @@ jobs:
           python-version: 3.9
       - name: Build and Publish
         run: |
-          chmod +x ./scripts/release_beta.sh
-          ./scripts/release_beta.sh
+          python -m pip install --upgrade pip
+          pip install build twine
+          python -m build
+          twine upload dist/*
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
